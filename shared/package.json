@@ -1,0 +1,16 @@
+{
+  "name": "@miniapp-template/shared",
+  "version": "1.0.0",
+  "description": "Shared TypeScript interfaces and types",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "rimraf": "^5.0.5"
+  }
+}
