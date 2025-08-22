@@ -18,7 +18,5 @@ export interface AuthToken {
 export interface UserContext {
   user: User | null;
   isAuthenticated: boolean;
-  token: string | null;
-  refreshToken: () => Promise<void>;
   logout: () => void;
 }

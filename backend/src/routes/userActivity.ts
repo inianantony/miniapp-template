@@ -105,6 +105,12 @@ function getCacheKey(filter: UserActivityRequestFilter): string {
   return JSON.stringify(filter);
 }
 
+function getApiCacheKey(filter: UserActivityRequestFilter): string {
+  const apiFilter = { ...filter };
+  delete apiFilter.controller;
+  return JSON.stringify(apiFilter);
+}
+
 function isValidCacheEntry(entry: CacheEntry): boolean {
   return Date.now() - entry.timestamp < entry.ttl;
 }
@@ -113,6 +119,7 @@ router.get("/", async (req: Request, res: Response) => {
   try {
     const filter: UserActivityRequestFilter = {
       userName: req.query.userName as string,
+      controller: req.query.controller as string,
       dateFrom: req.query.dateFrom as string,
       dateTo: req.query.dateTo as string,
       page: parseInt(req.query.page as string) || 1,
@@ -122,6 +129,7 @@ router.get("/", async (req: Request, res: Response) => {
     };
 
     const cacheKey = getCacheKey(filter);
+    const apiCacheKey = getApiCacheKey(filter);
 
     const cachedEntry = cache.get(cacheKey);
     if (cachedEntry && isValidCacheEntry(cachedEntry)) {
@@ -129,10 +137,38 @@ router.get("/", async (req: Request, res: Response) => {
       return res.json(cachedEntry.data);
     }
 
-    const data = await fetchFromExternalApi(filter, req);
+    let apiData: UserActivityResponse;
+    const apiCachedEntry = cache.get(apiCacheKey);
+    if (apiCachedEntry && isValidCacheEntry(apiCachedEntry)) {
+      console.log("💾 Using cached API data for filtering");
+      apiData = apiCachedEntry.data;
+    } else {
+      apiData = await fetchFromExternalApi(filter, req);
+      cache.set(apiCacheKey, {
+        data: apiData,
+        timestamp: Date.now(),
+        ttl: CACHE_TTL,
+      });
+    }
+
+    let finalData = apiData;
+    if (filter.controller) {
+      const filteredActivities = apiData.data
+        .filter(activity => activity.Controller === filter.controller)
+        .slice(0, 500);
+      
+      console.log(`🔍 Filtered to ${filteredActivities.length} activities for controller: ${filter.controller}`);
+      
+      finalData = {
+        ...apiData,
+        data: filteredActivities,
+        totalCount: filteredActivities.length,
+        totalPages: Math.ceil(filteredActivities.length / (filter.pageSize || 25))
+      };
+    }
 
     cache.set(cacheKey, {
-      data,
+      data: finalData,
       timestamp: Date.now(),
       ttl: CACHE_TTL,
     });
@@ -143,7 +179,7 @@ router.get("/", async (req: Request, res: Response) => {
       }
     }
 
-    res.json(data);
+    res.json(finalData);
   } catch (error) {
     console.error("Error in user activities endpoint:", error);
 

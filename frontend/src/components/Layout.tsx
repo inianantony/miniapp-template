@@ -1,33 +1,50 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, 
-  Database, 
-  Table2, 
   Activity,
-  Shield,
   Menu, 
   X, 
   User,
   LogOut,
-  Settings
+  Settings,
+  ChevronDown,
+  ChevronRight,
+  MessageSquare
 } from 'lucide-react';
 import { useUser } from '../hooks/useUser';
 
-const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Entities', href: '/entities', icon: Database },
-  { name: 'Data Grid', href: '/grid', icon: Table2 },
-  { name: 'User Activities', href: '/user-activities', icon: Activity },
-  { name: 'Auth Test', href: '/auth-test', icon: Shield },
+interface NavigationItem {
+  name: string;
+  href?: string;
+  icon: React.ComponentType<any>;
+  children?: NavigationItem[];
+}
+
+const navigation: NavigationItem[] = [
+  { 
+    name: 'User Activities', 
+    icon: Activity,
+    children: [
+      { name: 'All Activities', href: '/user-activities', icon: Activity },
+      { name: 'Chat App Activity', href: '/user-activities/chat-app', icon: MessageSquare },
+    ]
+  },
 ];
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedItems, setExpandedItems] = useState<string[]>(['User Activities']);
   const location = useLocation();
   const { user, logout } = useUser();
 
   const isActive = (path: string) => location.pathname === path;
+  const toggleExpanded = (itemName: string) => {
+    setExpandedItems(prev => 
+      prev.includes(itemName) 
+        ? prev.filter(name => name !== itemName)
+        : [...prev, itemName]
+    );
+  };
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -54,25 +71,70 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         </div>
 
         <nav className="mt-8 px-4">
-          <ul className="space-y-2">
+          <ul className="space-y-1">
             {navigation.map((item) => {
               const Icon = item.icon;
+              const isExpanded = expandedItems.includes(item.name);
+              const hasChildren = item.children && item.children.length > 0;
+              
               return (
                 <li key={item.name}>
-                  <Link
-                    to={item.href}
-                    className={`
-                      flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors
-                      ${isActive(item.href)
-                        ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-600'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                      }
-                    `}
-                    onClick={() => setSidebarOpen(false)}
-                  >
-                    <Icon className="mr-3 h-5 w-5" />
-                    {item.name}
-                  </Link>
+                  {hasChildren ? (
+                    <>
+                      <button
+                        onClick={() => toggleExpanded(item.name)}
+                        className="w-full flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors"
+                      >
+                        <Icon className="mr-3 h-5 w-5" />
+                        <span className="flex-1 text-left">{item.name}</span>
+                        {isExpanded ? (
+                          <ChevronDown className="h-4 w-4" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4" />
+                        )}
+                      </button>
+                      {isExpanded && item.children && (
+                        <ul className="mt-1 ml-6 space-y-1">
+                          {item.children.map((child) => {
+                            const ChildIcon = child.icon;
+                            return (
+                              <li key={child.name}>
+                                <Link
+                                  to={child.href!}
+                                  className={`
+                                    flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors
+                                    ${isActive(child.href!)
+                                      ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-600'
+                                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                    }
+                                  `}
+                                  onClick={() => setSidebarOpen(false)}
+                                >
+                                  <ChildIcon className="mr-3 h-4 w-4" />
+                                  {child.name}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      to={item.href!}
+                      className={`
+                        flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors
+                        ${isActive(item.href!)
+                          ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-600'
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        }
+                      `}
+                      onClick={() => setSidebarOpen(false)}
+                    >
+                      <Icon className="mr-3 h-5 w-5" />
+                      {item.name}
+                    </Link>
+                  )}
                 </li>
               );
             })}

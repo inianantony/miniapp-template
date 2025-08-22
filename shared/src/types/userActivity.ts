@@ -14,6 +14,7 @@ export interface UserActivity {
 
 export interface UserActivityRequestFilter {
   userName?: string;
+  controller?: string;
   dateFrom?: string;
   dateTo?: string;
   page?: number;

@@ -3,7 +3,7 @@ import { DataGrid } from "../components/DataGrid";
 import { createColumnHelper, ColumnDef } from "@tanstack/react-table";
 import { UserActivity, UserActivityRequestFilter } from "@miniapp-template/shared";
 import { UserActivityService } from "../services/UserActivityService";
-import { Calendar, MapPin, Monitor, User, Settings, Activity } from "lucide-react";
+import { Calendar, Monitor, User, Settings, Activity } from "lucide-react";
 
 const columnHelper = createColumnHelper<UserActivity>();
 const userActivityService = new UserActivityService();
@@ -55,21 +55,10 @@ const columns = [
     size: 100,
     cell: (info) => {
       const action = info.getValue();
-      const actionColors = {
-        Login: "bg-green-100 text-green-800",
-        Logout: "bg-red-100 text-red-800",
-        Create: "bg-blue-100 text-blue-800",
-        Update: "bg-yellow-100 text-yellow-800",
-        Delete: "bg-red-100 text-red-800",
-        View: "bg-gray-100 text-gray-800",
-        Export: "bg-purple-100 text-purple-800",
-        Import: "bg-indigo-100 text-indigo-800",
-        Search: "bg-cyan-100 text-cyan-800",
-      };
       return (
         <div className="flex items-center gap-1">
           <Activity className="h-3 w-3" />
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${actionColors[action as keyof typeof actionColors] || "bg-gray-100 text-gray-800"}`}>{action}</span>
+          <span className={`px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800`}>{action}</span>
         </div>
       );
     },
@@ -81,19 +70,6 @@ const columns = [
     header: "IP Address",
     size: 130,
     cell: (info) => <div className="font-mono text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded">{info.getValue()}</div>,
-  }),
-  columnHelper.accessor("IpCountry", {
-    header: "Country",
-    size: 80,
-    cell: (info) => (
-      <div className="flex items-center gap-2">
-        <MapPin className="h-4 w-4 text-green-500" />
-        <span className="font-medium text-gray-900">{info.getValue()}</span>
-      </div>
-    ),
-    filterFn: (row, columnId, value) => {
-      return value.includes(row.getValue(columnId));
-    },
   }),
   columnHelper.accessor("UserAgnet", {
     header: "User Agent",
