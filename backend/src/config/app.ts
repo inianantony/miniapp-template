@@ -10,8 +10,6 @@ export const config = {
   appName: process.env.APP_NAME || "defaultapp",
   basePath: process.env.BASE_PATH || "/defaultbasepath/defaultapp/",
 
-  corsOrigin: process.env.CORS_ORIGIN || "http://crossorgin:5173",
-
   useMockCrud: process.env.USE_MOCK_CRUD === "true",
   databasePath: process.env.DATABASE_PATH || "./data/mock.db",
 
