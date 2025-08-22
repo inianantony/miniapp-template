@@ -8,23 +8,10 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     base: env.VITE_BASE_PATH || "/defaultbasepath/defaultapp/",
-    build: {
-      outDir: "dist",
-      assetsDir: "assets",
-      sourcemap: mode === "development",
-    },
-    server: {
-      port: 5173,
-      // No proxy needed - backend serves the built frontend
-    },
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "./src"),
         "@shared": path.resolve(__dirname, "../shared/src"),
       },
-    },
-    define: {
-      global: "globalThis",
     },
   };
 });

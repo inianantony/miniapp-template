@@ -17,21 +17,13 @@
   },
   "dependencies": {
     "@miniapp-template/shared": "*",
-    "@hookform/resolvers": "^3.3.2",
     "@tanstack/react-table": "^8.21.3",
-    "axios": "^1.6.2",
-    "clsx": "^2.0.0",
-    "jspdf": "^2.5.1",
     "lucide-react": "^0.302.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.48.2",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.20.1",
-    "recharts": "^2.8.0",
-    "tailwind-merge": "^2.2.0",
-    "xlsx": "^0.18.5",
-    "yup": "^1.4.0"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.5",
