@@ -20,7 +20,6 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
   }
 
   private initDatabase(): void {
-    // Ensure data directory exists
     const dataDir = path.dirname(config.databasePath);
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
@@ -107,7 +106,7 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
         description: 'This entity is archived',
         status: 'archived',
         metadata: JSON.stringify({ category: 'old', priority: 'low' }),
-        createdAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+        createdAt: new Date(Date.now() - 86400000).toISOString(),
         updatedAt: new Date(Date.now() - 86400000).toISOString(),
         createdBy: 'system',
         updatedBy: 'system',
@@ -138,14 +137,12 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
       const sqlParams: any[] = [];
       const conditions: string[] = [];
 
-      // Add search condition
       if (params.search) {
         conditions.push('(name LIKE ? OR description LIKE ?)');
         const searchTerm = `%${params.search}%`;
         sqlParams.push(searchTerm, searchTerm);
       }
 
-      // Add filters
       if (params.filters) {
         Object.entries(params.filters).forEach(([key, value]) => {
           if (value !== undefined && value !== '') {
@@ -155,14 +152,12 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
         });
       }
 
-      // Apply conditions
       if (conditions.length > 0) {
         const whereClause = ` WHERE ${conditions.join(' AND ')}`;
         sql += whereClause;
         countSql += whereClause;
       }
 
-      // Add sorting
       if (params.sortBy) {
         const sortOrder = params.sortOrder || 'asc';
         sql += ` ORDER BY ${params.sortBy} ${sortOrder}`;
@@ -170,13 +165,11 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
         sql += ' ORDER BY updatedAt DESC';
       }
 
-      // Add pagination
       const page = params.page || 1;
       const pageSize = params.pageSize || 20;
       const offset = (page - 1) * pageSize;
       sql += ` LIMIT ${pageSize} OFFSET ${offset}`;
 
-      // Get total count first
       this.db.get(countSql, sqlParams, (err: Error | null, countRow: any) => {
         if (err) {
           reject(err);
@@ -186,7 +179,6 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
         const totalItems = countRow.total;
         const totalPages = Math.ceil(totalItems / pageSize);
 
-        // Get paginated data
         this.db.all(sql, sqlParams, (err: Error | null, rows: any[]) => {
           if (err) {
             reject(err);
@@ -253,7 +245,7 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
 
   async create(data: Partial<T>): Promise<ApiResponse<T>> {
     return new Promise((resolve) => {
-      const id = Date.now().toString(); // Simple ID generation
+      const id = Date.now().toString();
       const now = new Date().toISOString();
       
       const entity = {
@@ -305,7 +297,6 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
       const updates: string[] = [];
       const params: any[] = [];
 
-      // Build dynamic update query
       Object.entries(data).forEach(([key, value]) => {
         if (key !== 'id' && value !== undefined) {
           updates.push(`${key} = ?`);
@@ -319,7 +310,7 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
 
       updates.push('updatedAt = ?');
       params.push(now);
-      params.push(id); // For WHERE clause
+      params.push(id);
 
       const sql = `UPDATE ${this.tableName} SET ${updates.join(', ')} WHERE id = ?`;
 
@@ -333,7 +324,6 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
           return;
         }
 
-        // Return updated entity
         this.get(id).then(result => resolve(result));
       });
     });
@@ -386,7 +376,6 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
   }
 
   async bulkUpdate(updates: Array<{ id: string; data: Partial<T> }>): Promise<ApiResponse<T[]>> {
-    // For simplicity, implement as sequential updates
     const results: T[] = [];
     
     for (const update of updates) {
@@ -403,15 +392,11 @@ export class SQLiteProvider<T extends Entity = Entity> implements CRUDOperations
   }
 
   async export(params: FilterParams): Promise<Blob> {
-    // This would generate CSV/Excel data
-    // For now, return a mock blob
     const csvContent = 'id,name,description,status\n1,Sample,Description,active';
     return new Blob([csvContent], { type: 'text/csv' });
   }
 
   async import(file: File): Promise<ApiResponse<{ imported: number; errors: string[] }>> {
-    // This would parse CSV/Excel and import data
-    // For now, return a mock response
     return {
       success: true,
       data: {

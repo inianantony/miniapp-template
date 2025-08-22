@@ -1,17 +1,17 @@
-import { defineConfig, loadEnv } from 'vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
+import { defineConfig, loadEnv } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-  
+  const env = loadEnv(mode, process.cwd(), "");
+
   return {
     plugins: [react()],
-    base: env.VITE_BASE_PATH || '/miniappsdev/myapp/',
+    base: env.VITE_BASE_PATH || "/defaultbasepath/defaultapp/",
     build: {
-      outDir: 'dist',
-      assetsDir: 'assets',
-      sourcemap: mode === 'development',
+      outDir: "dist",
+      assetsDir: "assets",
+      sourcemap: mode === "development",
     },
     server: {
       port: 5173,
@@ -19,12 +19,12 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, './src'),
-        '@shared': path.resolve(__dirname, '../shared/src'),
+        "@": path.resolve(__dirname, "./src"),
+        "@shared": path.resolve(__dirname, "../shared/src"),
       },
     },
     define: {
-      global: 'globalThis',
+      global: "globalThis",
     },
   };
 });

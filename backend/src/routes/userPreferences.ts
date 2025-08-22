@@ -3,10 +3,8 @@ import { asyncHandler, createError } from '../middleware/errorHandler';
 
 export const userPreferencesRouter = Router();
 
-// Mock user preferences storage (in production, this would be in a database)
 const mockPreferences: Record<string, any> = {};
 
-// GET /api/user-preferences - Get user preferences
 userPreferencesRouter.get('/', asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user?.id;
   
@@ -36,7 +34,6 @@ userPreferencesRouter.get('/', asyncHandler(async (req: Request, res: Response) 
   });
 }));
 
-// PUT /api/user-preferences - Update user preferences
 userPreferencesRouter.put('/', asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user?.id;
   
@@ -46,7 +43,6 @@ userPreferencesRouter.put('/', asyncHandler(async (req: Request, res: Response) 
 
   const updates = req.body;
   
-  // Merge with existing preferences
   const currentPreferences = mockPreferences[userId] || {};
   const updatedPreferences = {
     ...currentPreferences,

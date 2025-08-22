@@ -16,6 +16,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@miniapp-template/shared": "*",
     "@hookform/resolvers": "^3.3.2",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.6.2",

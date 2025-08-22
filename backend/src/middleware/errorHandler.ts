@@ -33,7 +33,6 @@ export const errorHandler = (
     details: err.details,
   };
 
-  // Don't leak internal errors in production
   if (status === 500 && process.env.NODE_ENV === 'production') {
     errorResponse.message = 'Internal Server Error';
     delete errorResponse.details;

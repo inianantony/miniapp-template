@@ -14,7 +14,6 @@ export class CrudService<T extends Entity = Entity> implements CRUDOperations<T>
   private provider: CRUDOperations<T> & BulkOperations<T>;
 
   constructor() {
-    // Choose provider based on configuration
     if (config.useMockCrud) {
       this.provider = new SQLiteProvider<T>();
     } else {

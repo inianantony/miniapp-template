@@ -5,7 +5,6 @@ import { config } from '../config/app';
 
 export const authRouter = Router();
 
-// Mock user database (in production, this would come from Azure AD or similar)
 const MOCK_USERS = [
   {
     id: 'user-123',
@@ -27,61 +26,50 @@ const MOCK_USERS = [
   }
 ];
 
-// Mock app permissions (mimics the permission files from the sample)
 const APP_PERMISSIONS: Record<string, { allowed: string[]; denied: string[] }> = {
   'myapp': {
     allowed: [
       'developer@company.com',
       'admin@company.com',
       'analyst@company.com',
-      '*@company.com' // Allow all company emails
+      '*@company.com'
     ],
     denied: []
   }
 };
 
-// Check if user has access to app (mimics checkUserAccess from sample)
 function checkUserAccess(userEmail: string, appName: string): boolean {
   const permissions = APP_PERMISSIONS[appName];
   if (!permissions) return false;
 
   const email = userEmail.toLowerCase();
 
-  // Check if explicitly denied
   if (permissions.denied?.includes(email)) {
     return false;
   }
 
-  // Check if explicitly allowed
   if (permissions.allowed?.includes(email)) {
     return true;
   }
 
-  // Check for wildcard access
   for (const pattern of permissions.allowed || []) {
     if (pattern === '*') {
-      return true; // Allow all authenticated users
+      return true;
     }
     if (pattern.startsWith('*@') && email.endsWith(pattern.substring(1))) {
-      return true; // Domain wildcard match
+      return true;
     }
   }
 
   return false;
 }
 
-// Mock token endpoint (simulates /miniappsdev/auth/token)
-// This mimics the token generation from the sample auth service
 authRouter.get('/token', (req: Request, res: Response) => {
   try {
-    // In development, we simulate getting user info from headers or cookies
-    // In production, this would validate an existing session/cookie
     
-    // Get user from request (in real scenario, this comes from NGINX headers or session)
     const userEmail = req.headers['x-user-email'] || req.user?.email || 'developer@company.com';
     const mockUser = MOCK_USERS.find(u => u.email === userEmail) || MOCK_USERS[0];
 
-    // Check if user has access to the app
     const appName = config.appName;
     const hasAccess = checkUserAccess(mockUser.email, appName);
 
@@ -92,7 +80,6 @@ authRouter.get('/token', (req: Request, res: Response) => {
       });
     }
 
-    // Create JWT token (mimics the sample auth service JWT creation)
     const payload = {
       id: mockUser.id,
       email: mockUser.email.toLowerCase(),
@@ -128,7 +115,6 @@ authRouter.get('/token', (req: Request, res: Response) => {
   }
 });
 
-// Verify token endpoint (for testing)
 authRouter.post('/verify', (req: Request, res: Response) => {
   try {
     const { token } = req.body;
@@ -159,7 +145,6 @@ authRouter.post('/verify', (req: Request, res: Response) => {
   }
 });
 
-// Mock userinfo endpoint (mimics Azure AD Graph API response)
 authRouter.get('/userinfo', (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
   
@@ -171,7 +156,6 @@ authRouter.get('/userinfo', (req: Request, res: Response) => {
     const token = authHeader.substring(7);
     const decoded = jwt.verify(token, config.jwtSecret) as any;
     
-    // Return user info in Microsoft Graph API format
     res.json({
       id: decoded.id,
       mail: decoded.email,
@@ -190,9 +174,7 @@ authRouter.get('/userinfo', (req: Request, res: Response) => {
   }
 });
 
-// Mock logout endpoint
 authRouter.post('/logout', (req: Request, res: Response) => {
-  // In a real implementation, this would invalidate the token/session
   res.json({
     success: true,
     message: 'Logged out successfully'

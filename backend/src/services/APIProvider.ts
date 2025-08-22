@@ -12,7 +12,6 @@ export class APIProvider<T extends Entity = Entity> implements CRUDOperations<T>
   private baseUrl: string;
 
   constructor() {
-    // In production, this would be the actual company CRUD API
     this.baseUrl = `${config.companyApiBaseUrl}/api/entities`;
     console.log('🌐 API Provider initialized for:', this.baseUrl);
   }
@@ -22,8 +21,6 @@ export class APIProvider<T extends Entity = Entity> implements CRUDOperations<T>
     options: RequestInit = {}
   ): Promise<ApiResponse<R>> {
     try {
-      // In production, you would get the Bearer token from the auth service
-      // For now, we'll use a placeholder
       const token = 'mock-bearer-token-from-auth-service';
       
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
@@ -123,7 +120,6 @@ export class APIProvider<T extends Entity = Entity> implements CRUDOperations<T>
       return await response.blob();
     } catch (error) {
       console.error('❌ Export failed:', error);
-      // Return empty blob on error
       return new Blob([''], { type: 'text/plain' });
     }
   }

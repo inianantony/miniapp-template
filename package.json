@@ -6,15 +6,13 @@
   "workspaces": [
     "frontend",
     "backend", 
-    "shared",
-    "mock-api"
+    "shared"
   ],
   "scripts": {
-    "dev": "npm run build:frontend:dev && concurrently --kill-others-on-fail --kill-others \"npm run dev:backend\" \"npm run dev:mock-api\"",
-    "dev:watch": "npm run build:frontend && concurrently --kill-others-on-fail --kill-others \"npm run dev:backend\" \"npm run dev:mock-api\" \"npm run dev:frontend-watch\"",
+    "dev": "npm run build:frontend:dev && npm run dev:backend",
+    "dev:watch": "npm run build:frontend && concurrently --kill-others-on-fail --kill-others \"npm run dev:backend\" \"npm run dev:frontend-watch\"",
     "dev:frontend-watch": "cd frontend && npm run build:watch",
-    "dev:backend": "cd backend && npm run dev", 
-    "dev:mock-api": "cd mock-api && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
     "build": "npm run build:shared && npm run build:frontend && npm run build:backend",
     "build:frontend": "cd frontend && npm run build",
     "build:frontend:dev": "cd frontend && npm run build:dev",

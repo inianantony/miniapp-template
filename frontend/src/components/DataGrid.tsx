@@ -163,11 +163,9 @@ export function DataGrid<T>({
 
   return (
     <div className={`border border-gray-200 rounded-lg overflow-hidden ${className}`}>
-      {/* Header with controls */}
       <div className="bg-gray-50 border-b border-gray-200 p-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            {/* Global search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <input
@@ -179,7 +177,6 @@ export function DataGrid<T>({
               />
             </div>
 
-            {/* Selected rows info */}
             {enableSelection && selectedRows.length > 0 && (
               <div className="text-sm text-gray-600">
                 {selectedRows.length} row{selectedRows.length !== 1 ? 's' : ''} selected
@@ -188,7 +185,6 @@ export function DataGrid<T>({
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Bulk actions */}
             {enableSelection && selectedRows.length > 0 && bulkActions && (
               <div className="flex gap-2">
                 {bulkActions.map((action) => (
@@ -209,7 +205,6 @@ export function DataGrid<T>({
               </div>
             )}
 
-            {/* Export buttons */}
             {enableExport && (
               <div className="flex gap-1">
                 <button
@@ -229,7 +224,6 @@ export function DataGrid<T>({
               </div>
             )}
 
-            {/* Column visibility */}
             {enableColumnVisibility && (
               <div className="relative">
                 <button
@@ -267,7 +261,6 @@ export function DataGrid<T>({
         </div>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -338,7 +331,6 @@ export function DataGrid<T>({
         </table>
       </div>
 
-      {/* Pagination */}
       {enablePagination && (
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200">
           <div className="flex-1 flex justify-between sm:hidden">

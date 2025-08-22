@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { Plus, Search, Filter, Download, Trash2, Edit } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { Entity } from '@shared/types/entity';
+import { Entity } from '@miniapp-template/shared';
 
 // Mock API call - replace with actual service
 const fetchEntities = async () => {

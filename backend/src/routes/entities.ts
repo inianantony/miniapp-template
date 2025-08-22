@@ -7,7 +7,6 @@ import { config } from '../config/app';
 export const entitiesRouter = Router();
 const crudService = new CrudService<Entity>();
 
-// GET /api/entities - List entities with pagination and filtering
 entitiesRouter.get('/', asyncHandler(async (req: Request, res: Response) => {
   const filterParams: FilterParams = {
     search: req.query.search as string,
@@ -22,7 +21,6 @@ entitiesRouter.get('/', asyncHandler(async (req: Request, res: Response) => {
   res.json(result);
 }));
 
-// GET /api/entities/:id - Get single entity
 entitiesRouter.get('/:id', asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
   
@@ -39,7 +37,6 @@ entitiesRouter.get('/:id', asyncHandler(async (req: Request, res: Response) => {
   res.json(result);
 }));
 
-// POST /api/entities - Create new entity
 entitiesRouter.post('/', asyncHandler(async (req: Request, res: Response) => {
   const entityData = req.body;
   
@@ -59,7 +56,6 @@ entitiesRouter.post('/', asyncHandler(async (req: Request, res: Response) => {
   res.status(201).json(result);
 }));
 
-// PUT /api/entities/:id - Update entity
 entitiesRouter.put('/:id', asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
   const updateData = req.body;
@@ -80,7 +76,6 @@ entitiesRouter.put('/:id', asyncHandler(async (req: Request, res: Response) => {
   res.json(result);
 }));
 
-// DELETE /api/entities/:id - Delete entity
 entitiesRouter.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
   
@@ -97,7 +92,6 @@ entitiesRouter.delete('/:id', asyncHandler(async (req: Request, res: Response) =
   res.json(result);
 }));
 
-// POST /api/entities/bulk-delete - Bulk delete entities
 entitiesRouter.post('/bulk-delete', asyncHandler(async (req: Request, res: Response) => {
   const { ids } = req.body;
   
@@ -109,7 +103,6 @@ entitiesRouter.post('/bulk-delete', asyncHandler(async (req: Request, res: Respo
   res.json(result);
 }));
 
-// GET /api/entities/export - Export entities
 entitiesRouter.get('/export', asyncHandler(async (req: Request, res: Response) => {
   const filterParams: FilterParams = {
     search: req.query.search as string,
@@ -120,8 +113,6 @@ entitiesRouter.get('/export', asyncHandler(async (req: Request, res: Response) =
 
   const format = req.query.format as string || 'csv';
   
-  // This would generate and return a file
-  // For now, return a success message
   res.json({
     success: true,
     message: `Export in ${format} format initiated`,

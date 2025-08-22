@@ -31,7 +31,6 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
@@ -39,7 +38,6 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         />
       )}
 
-      {/* Sidebar */}
       <div className={`
         fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out
         lg:translate-x-0 lg:static lg:inset-0
@@ -81,7 +79,6 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           </ul>
         </nav>
 
-        {/* User menu */}
         <div className="absolute bottom-0 w-full p-4 border-t border-gray-200">
           <div className="flex items-center space-x-3 mb-4">
             <div className="flex-shrink-0">
@@ -114,9 +111,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         </div>
       </div>
 
-      {/* Main content */}
       <div className="flex-1 lg:ml-0">
-        {/* Top bar */}
         <div className="lg:hidden flex items-center justify-between h-16 px-4 bg-white border-b border-gray-200">
           <button
             onClick={() => setSidebarOpen(true)}
@@ -128,7 +123,6 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           <div></div>
         </div>
 
-        {/* Page content */}
         <main className="flex-1 overflow-auto">
           {children}
         </main>

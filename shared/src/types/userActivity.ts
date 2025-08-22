@@ -1,15 +1,15 @@
 export interface UserActivity {
-  id: number;
-  userName: string;
-  activityOn: string;
-  activityAt: string;
-  controller: string;
-  action: string;
-  requestParam: string;
-  activityIp: string;
-  ipCountry: string;
-  tokenId: string;
-  userAgent: string;
+  Id: number;
+  UserName: string;
+  ActivityOn: string;
+  ActivityAt: string;
+  Controller: string;
+  Action: string;
+  RequestParam: string;
+  ActivityIp: string;
+  IpCountry: string;
+  TokenId: string;
+  UserAgnet: string;
 }
 
 export interface UserActivityRequestFilter {
@@ -19,7 +19,7 @@ export interface UserActivityRequestFilter {
   page?: number;
   pageSize?: number;
   sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
+  sortDirection?: "asc" | "desc";
 }
 
 export interface UserActivityResponse {
